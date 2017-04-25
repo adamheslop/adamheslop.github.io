@@ -20,12 +20,15 @@
 		<script src="./js/Detector.js"></script>
 		<script src="./js/controls/OrbitControls.js"></script>
 
+		<script src="libs/stats.min.js"></script>
+
 
 		<script>
 
+		var stats,container,element;
 		
 		init();
-        render();	
+        animate();
 
 		function init() {
 			scene = new THREE.Scene();
@@ -52,8 +55,6 @@
 
 
 
-			effect = new THREE.StereoEffect(renderer);
-
 			controls = new THREE.OrbitControls(camera, element);
 			controls.target.set(
 			  camera.position.x + 0.15,
@@ -73,8 +74,29 @@
 				controls.update();
 				element.addEventListener('click', fullscreen, false);
 				window.removeEventListener('deviceorientation', setOrientationControls, true);
-				}
-				window.addEventListener('deviceorientation', setOrientationControls, true);
+			}
+			window.addEventListener('deviceorientation', setOrientationControls, true);
+
+
+			//---------------------------------------|| Stereo
+			//-----------------------------------------------||
+			effect = new THREE.StereoEffect(renderer);
+			effect.setSize( window.innerWidth, window.innerHeight );	
+			effect.eyeSeparation = 10;
+			//-----------------------------------------------||
+			//-----------------------------------------------||
+
+
+			//---------------------------------------|| Stats
+			//-----------------------------------------------||
+			// stats = new Stats();
+			
+			// stats.domElement.style.position = 'absolute';
+			// stats.domElement.style.top = '0px';
+			// stats_element = stats.domElement 
+			// container.appendChild( stats_element );
+			//-----------------------------------------------||
+			//-----------------------------------------------||
 
 
 			//----------------------------------------|| Lights
@@ -104,11 +126,22 @@
 
 		}
 
-           
-        function render() {
-			requestAnimationFrame(render);
-			renderer.render(scene, camera);
-        }
+
+		function animate() {
+
+			requestAnimationFrame( animate );
+
+			render();
+			// stats.update();
+
+		}
+
+		function render() {
+
+			effect.render( scene, camera );
+
+		}      
+
 
 
 		</script>
