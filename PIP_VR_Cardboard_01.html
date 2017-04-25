@@ -27,6 +27,7 @@
 
 		var stats,container,element;
 		var camera, controls, scene, renderer, effect;
+		var clock = new THREE.Clock();
 		
 		init();
         animate();
@@ -152,6 +153,7 @@
 
 		function render() {
 
+			controls.update( clock.getDelta() );
 			effect.render( scene, camera );
 
 		}      
