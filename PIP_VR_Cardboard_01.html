@@ -20,6 +20,7 @@
 		<script src="./js/Detector.js"></script>
 		<script src="./js/controls/OrbitControls.js"></script>
 		<script src="./js/controls/DeviceOrientationControls.js"></script>
+		<script src="js/third-party/threejs/loaders/OBJLoader.js"></script>
 
 		<script src="libs/stats.min.js"></script>
 
@@ -48,7 +49,7 @@
 
 			camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.001, 700);
 
-			camera.position.set(0, 15, 0);
+			camera.position.set(0, 1.7, 0);
 
 			scene.add(camera);
 
@@ -57,7 +58,7 @@
 			controls.target.set(
 			  camera.position.x + 0.1,
 			  camera.position.y,
-			  camera.position.z
+			  camera.position.z + 5
 			);
 
 			function setOrientationControls(e) {
@@ -80,6 +81,60 @@
 			effect.eyeSeparation = 10;
 			//-----------------------------------------------||
 			//-----------------------------------------------||
+			
+
+			//--------------------------------|| Scene colours
+			//-----------------------------------------------||
+			light_col    = 0x999999
+			light_col_01 = 0xff0060
+			light_col_02 = 0xff0060
+			context_colour = 0xffffff
+			//-----------------------------------------------||
+			//-----------------------------------------------||
+
+			//---------------------------------------|| Models
+			//-----------------------------------------------||
+			var loader = new THREE.OBJLoader();
+                // loader.setPath("/assets");
+
+                loader.load(
+                    // resource URL
+                    "/models/Context_02.obj",
+
+                    // pass the loaded data to the onLoad function.
+                    //Here it is assumed to be an object
+                    function ( obj ) {
+                        //add the loaded object to the scene
+                        obj.scale.x    = 0.001
+                        obj.scale.y    = 0.001
+                        obj.scale.z    = 0.001
+                        //obj.position.y = 0// = new THREE.Vector3(0,100,0);
+                        // obj.rotation.x = 0;
+
+                   		context_material = new THREE.MeshStandardMaterial({color: context_colour, wireframe: true })
+                   		//envMap: getCubeMap(8)
+                   		console.log(obj.children)
+                   		children_cnt = obj.children.length
+                   		console.log(children_cnt)
+                   		for (var i = 0; i < children_cnt; i++) {
+                   		// for (var i = 0; i < object.children.length; i++){
+                 			obj.children[i].material = context_material
+							}
+                        scene.add( obj );
+                    },
+
+                    // Function called when download progresses
+                    function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                    },
+
+                    // Function called when download errors
+                    function ( xhr ) {
+                        console.error( 'An error happened' );
+                    }
+                );
+			//-----------------------------------------------||
+			//-----------------------------------------------||
 
 
 			//---------------------------------------|| Stats
@@ -96,11 +151,11 @@
 
 			//----------------------------------------|| Lights
 			//-----------------------------------------------||
-			var light = new THREE.PointLight(0x999999, 2, 100);
-			light.position.set(50, 50, 50);
+			var light = new THREE.PointLight(light_col_01, 2, 100);
+			light.position.set(0, 20, 5);
 			scene.add(light);
 
-			var lightScene = new THREE.PointLight(0x999999, 2, 100);
+			var lightScene = new THREE.PointLight(light_col_02, 2, 100);
 			lightScene.position.set(0, 5, 0);
 			scene.add(lightScene);
 			//-----------------------------------------------||
@@ -113,9 +168,9 @@
 			material = new THREE.MeshBasicMaterial( { color: 0xff0060 } ); var cube = new THREE.Mesh( geometry, material ); 
 			scene.add( cube );
 
-			geometry = new THREE.TetrahedronGeometry(15, 5);
-			material = new THREE.MeshBasicMaterial( { color: 0xff0060, wireframe: true } ); var tet = new THREE.Mesh( geometry, material ); 
-			scene.add( tet );
+			// geometry = new THREE.TetrahedronGeometry(15, 5);
+			// material = new THREE.MeshBasicMaterial( { color: 0xff0060, wireframe: true } ); var tet = new THREE.Mesh( geometry, material ); 
+			// scene.add( tet );
 			//-----------------------------------------------||
 			//-----------------------------------------------||
 
